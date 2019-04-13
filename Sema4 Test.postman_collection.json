@@ -1,0 +1,488 @@
+{
+	"info": {
+		"_postman_id": "5f6512ba-6b56-433c-ab9e-415ff1861657",
+		"name": "Sema4 Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Session ID Negative Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f2489fa-d3db-4604-a689-43311342a864",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 400\", function() {",
+							"    pm.response.to.have.status(400);",
+							"    pm.response.to.be.error;",
+							"    pm.response.to.be.badRequest;",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "679594da-9eb0-4bd8-b6ec-b871e0daf666",
+						"exec": [
+							"let bad_username = pm.iterationData.get(\"BadUserName\");",
+							"console.log(\"Username that will be user for Bad user:\", bad_username);",
+							"",
+							"pm.environment.set(\"UserName\", bad_username);",
+							"",
+							"let bad_pwd = pm.iterationData.get(\"Badpwd\");",
+							"console.log(\"Username that will be user for Bad user:\", bad_pwd);",
+							"",
+							"pm.environment.set(\"Password\", bad_pwd);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{Password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{UserName}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://www.libraryinformationsystem.org/Services/RestService.svc/session?",
+					"protocol": "http",
+					"host": [
+						"www",
+						"libraryinformationsystem",
+						"org"
+					],
+					"path": [
+						"Services",
+						"RestService.svc",
+						"session"
+					],
+					"query": [
+						{
+							"key": "callback",
+							"value": "JSON",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Test no Session ID issue when its wrong user name"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Session ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f2489fa-d3db-4604-a689-43311342a864",
+						"exec": [
+							"let newSessionID = pm.response.json();",
+							"",
+							"pm.environment.set(\"CurrentSessionID\", newSessionID);",
+							"",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Returns 15 char alhpanumeric id\", function () {",
+							"",
+							"    pm.expect(newSessionID).to.match(/^[-a-z0-9]{36}$/);",
+							"    ",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "librarian",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "librarian",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://www.libraryinformationsystem.org/Services/RestService.svc/session?",
+					"protocol": "http",
+					"host": [
+						"www",
+						"libraryinformationsystem",
+						"org"
+					],
+					"path": [
+						"Services",
+						"RestService.svc",
+						"session"
+					],
+					"query": [
+						{
+							"key": "callback",
+							"value": "JSON",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f2489fa-d3db-4604-a689-43311342a864",
+						"exec": [
+							"var AuthorListSchema = {",
+							"    \"Author\": ",
+							"      {",
+							"          \"Age\" : \"number\",",
+							"          \"Id\"  : \"number\",",
+							"          \"Name\": \"string\",",
+							"      }",
+							"      ",
+							"};",
+							"",
+							"let AuthorDetailInfo =[];",
+							"",
+							"let ListofAuthorResp = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(ListofAuthorResp, AuthorListSchema)).to.be.true;",
+							"",
+							"});",
+							"",
+							"pm.test('Get Authors into the environment vars Array', function() {",
+							"",
+							"for(let i=0; i<ListofAuthorResp.length; i++) {",
+							"",
+							"  var Authors = ListofAuthorResp[i];",
+							"  AuthorDetailInfo.push({",
+							"      \"Age\": Authors.Age,",
+							"      \"Id\" : Authors.Id,",
+							"      \"Name\" : Authors.Name",
+							"  });",
+							"}",
+							"",
+							"  pm.environment.set(\"AuthorDetailArray\",AuthorDetailInfo );",
+							"  pm.environment.set(\"MaxAuthor\",(ListofAuthorResp.length-1) );",
+							"      ",
+							"    ",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "librarian",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "librarian",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://www.libraryinformationsystem.org/Services/RestService.svc/author?session_id={{CurrentSessionID}}",
+					"protocol": "http",
+					"host": [
+						"www",
+						"libraryinformationsystem",
+						"org"
+					],
+					"path": [
+						"Services",
+						"RestService.svc",
+						"author"
+					],
+					"query": [
+						{
+							"key": "session_id",
+							"value": "{{CurrentSessionID}}"
+						}
+					]
+				},
+				"description": "Get Author"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Author by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f2489fa-d3db-4604-a689-43311342a864",
+						"exec": [
+							"var AuthorListSchema = {",
+							"    \"Author\": ",
+							"      {",
+							"          \"Age\" : \"number\",",
+							"          \"Id\"  : \"number\",",
+							"          \"Name\": \"string\",",
+							"      }",
+							"      ",
+							"};",
+							"",
+							"let AuthorDetailInfo =[];",
+							"",
+							"let OneAuthorResp = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(OneAuthorResp, AuthorListSchema)).to.be.true;",
+							"",
+							"});",
+							"",
+							"pm.test('Get Single Authors into the environment var', function() {",
+							"",
+							"",
+							"",
+							"  var Authors = OneAuthorResp;",
+							"  ",
+							"  AuthorDetailInfo.push({",
+							"      \"Age\": Authors.Age,",
+							"      \"Id\" : Authors.Id,",
+							"      \"Name\" : Authors.Name})",
+							"",
+							"",
+							"",
+							"  pm.environment.set(\"OneAuthorFromID\",AuthorDetailInfo );",
+							"      ",
+							"    ",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "226e83a7-0720-4a5b-b75c-ae6a8477ef0d",
+						"exec": [
+							"let thisAuthorID =  pm.iterationData.get(\"TestID\");",
+							"",
+							"console.log(\"thisAuthorID 1  is :\", thisAuthorID);",
+							"",
+							"let MaxAuthor = pm.environment.get(\"MaxAuthor\");",
+							"",
+							"    if (thisAuthorID > MaxAuthor)",
+							"    {",
+							"        thisAuthorID = MaxAuthor;",
+							"    }",
+							"    ",
+							"",
+							"console.log(\"thisAuthorID is :\", thisAuthorID);",
+							"",
+							"    let Cur_AuthorArray = pm.environment.get(\"AuthorDetailArray\");",
+							"    ",
+							"   // console.log(\"Cur_AuthorArray is :\", JSON.stringify(Cur_AuthorArray));",
+							"    ",
+							"    let AuthorIDbeingSent = Cur_AuthorArray[thisAuthorID];",
+							"",
+							"    // console.log(\"AuthorIDbeingSent is :\", JSON.stringify(AuthorIDbeingSent));",
+							"    ",
+							"    pm.environment.set(\"AuthorIDBeingSentisNOW\",AuthorIDbeingSent.Id );",
+							"",
+							"    ",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "librarian",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "librarian",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://www.libraryinformationsystem.org/Services/RestService.svc/author/{{AuthorIDBeingSentisNOW}}?session_id={{CurrentSessionID}}",
+					"protocol": "http",
+					"host": [
+						"www",
+						"libraryinformationsystem",
+						"org"
+					],
+					"path": [
+						"Services",
+						"RestService.svc",
+						"author",
+						"{{AuthorIDBeingSentisNOW}}"
+					],
+					"query": [
+						{
+							"key": "session_id",
+							"value": "{{CurrentSessionID}}"
+						}
+					]
+				},
+				"description": "Get Author"
+			},
+			"response": []
+		}
+	]
+}
