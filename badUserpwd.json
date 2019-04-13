@@ -1,0 +1,22 @@
+[
+    {
+        "BadUserName": "",
+        "Badpwd": "",
+		"TestID" : 0
+    },
+    {
+        "BadUserName": "user1",
+        "Badpwd": "",
+		"TestID" : 1
+    },
+    {
+        "BadUserName": "librarian",
+        "Badpwd": "password",
+		"TestID" : 2
+    },
+    {
+        "BadUserName": "user1",
+        "Badpwd": "librarian",
+		"TestID" : 3        
+    }
+]
