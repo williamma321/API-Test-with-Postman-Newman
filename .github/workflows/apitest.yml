@@ -1,8 +1,6 @@
 name: demo-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions on Newman
-on:
-  push:
-	branches: [ main ]
+run-name: ${{ github.actor }} is demo GitHub Actions on Newman
+on: [push]
 jobs:
   testnewman:
 	runs-on: ubuntu-latest
