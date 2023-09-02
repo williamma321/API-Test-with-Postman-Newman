@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/elixir:stable
+      - image: cimg/elixir:1.15.5-erlang-26.0.2-node
       
     working_directory: ~/repo
     
