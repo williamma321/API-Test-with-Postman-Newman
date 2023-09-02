@@ -10,8 +10,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: NPM Ignore
-          command: 'sudo npm i -g npmignore'
+          name: NPM Ignore and environment setup
+          command: |
+            sh .circleci/scripts/replace_sct.sh
+            sudo npm i -g npmignore
           
       - run:
           name: Install Newman
@@ -19,7 +21,7 @@ jobs:
           
       - run:
           name: API Testing Demo Suite
-          command: 'newman run "./Sema4\ Test.postman_collection.json"  --environment="./SEMA-Test.postman_environment.json" -d "./badUserpwd.json" -r cli,junit --insecure'
+          command: 'newman run "./Sema4 Test.postman_collection.json"  --environment="./SEMA-Test.postman_environment.json" -d "./badUserpwd.json" -r cli,junit --insecure'
           
       - store_test_results:
           path: ./
