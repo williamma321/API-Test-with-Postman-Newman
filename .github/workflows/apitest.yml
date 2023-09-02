@@ -1,0 +1,15 @@
+name: demo-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions on Newman
+on:
+  push:
+	branches: [ main ]
+jobs:
+  testnewman:
+	runs-on: ubuntu-latest
+	steps:
+  	- uses: actions/checkout@master
+  	- uses: actions/setup-node@v3
+  	- run: sed -i -e 's/user_placeholder/${{ secrets.APIUSERNAME }}/g' SEMA-Test.postman_environment.json
+  	- run: sed -i -e 's/password_placeholder/${{ secrets.APIPWD }}/g' SEMA-Test.postman_environment.json
+  	- run: npm install -g newman
+  	- run: newman run Sema4\ Test.postman_collection.json -e SEMA-Test.postman_environment.json -d badUserpwd.json
